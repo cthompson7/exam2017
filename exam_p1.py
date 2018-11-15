@@ -9,8 +9,35 @@ def speak_Chinese(number):
 
     Returns: a string that is the number in Chinese
     '''
-    pass
+    listOfNumbers = []
+    stringNumber = str(number)
 
+    if 10 >= number >= 0:
+        return trans[str(number)]
+
+    if  19 >= number >= 11:
+        return trans['10'] + " " + trans[str(number-10)]
+
+    if 99 >= number >= 20:
+        for i in stringNumber:
+            listOfNumbers.append(i)
+        if listOfNumbers[1] == '0':
+            return trans[listOfNumbers[0]] + ' ' + trans['10']
+        return trans[listOfNumbers[0]] + ' ' + trans['10'] + ' ' + trans[listOfNumbers[1]]
+
+    if number == 100:
+        return trans['1'] + " " + trans['100']
+
+    if 999 >= number >= 101:
+        for i in stringNumber:
+                listOfNumbers.append(i)
+        if listOfNumbers[1] == '0' and listOfNumbers[2] == '0':
+            return trans[listOfNumbers[0]] + ' ' + trans['100']
+        if listOfNumbers[1] == '0':
+            return trans[listOfNumbers[0]] + ' ' + trans['100'] + ' ' + trans['0'] + ' ' + trans[listOfNumbers[2]]
+        if listOfNumbers[2] == '0':
+            return trans[listOfNumbers[0]] + ' ' + trans['100'] + ' ' + trans[listOfNumbers[1]] + ' ' + trans['10']
+        return trans[listOfNumbers[0]] + ' ' + trans['100'] + ' ' + trans[listOfNumbers[1]] + ' ' + trans['10'] + ' ' + trans[listOfNumbers[2]]
 
 # For testing
 def main():

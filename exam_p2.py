@@ -74,7 +74,14 @@ class Text(object):
         Example: an_instance_of_Text.create_moved_dict(2) would generate
         {'a': 'c', 'b': 'd', 'c':'e', ...}  
         '''
-        pass  # delete this line and replace with your code here
+        movingDict = dict()
+        count = 97
+        upperCount = 65
+        for i in range(26):
+            movingDict[chr(count+i)] = chr(count + (i+move)%26)
+            movingDict[chr(upperCount+i)] = chr(upperCount + (i+move)%26)
+
+        return movingDict
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -87,8 +94,20 @@ class Text(object):
         Returns: the text (string) in which every character is moved
              down the alphabet by the input move
         '''
-        pass  # delete this line and replace with your code here
+        dictCreated = self.create_moved_dict(move)
+        NewString = ""
+        for letter in self.text:
+            NewString = dictCreated.get(letter,letter) + NewString
+        return NewString[::-1]
 
+        # ciphered_text = ""
+        # moved_dict = self.create_moved_dict(move)
+        # for letter in self.get_text():
+        #     ciphered_text += moved_dict[letter] if letter in moved_dict else letter
+        # return ciphered_text
+
+# test = Text("hello")
+# print(test.apply_move(1))
 
 class PlainText(Text):
 
@@ -110,7 +129,12 @@ class PlainText(Text):
         Note: you must use the parent class constructor(__init__ function) 
         so less code is repeated
         '''
-        pass  # delete this line and replace with your code here
+        self.text = text
+        self.valid_words = load_wordlist(WORDLIST_FILENAME)
+        self.move = move
+        self.encrypting_dict = self.create_moved_dict(move)
+        self.encrypted_text = self.apply_move(move)
+
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -120,7 +144,7 @@ class PlainText(Text):
 
         Returns: self.move
         '''
-        pass  # delete this line and replace with your code here
+        return self.move
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -130,7 +154,7 @@ class PlainText(Text):
 
         Returns: a COPY of self.encrypting_dict
         '''
-        pass  # delete this line and replace with your code here
+        return self.encrypting_dict[:]
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -140,7 +164,7 @@ class PlainText(Text):
 
         Returns: self.encrypted_text
         '''
-        pass  # delete this line and replace with your code here
+        return self.encrypted_text
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -154,7 +178,9 @@ class PlainText(Text):
 
         Returns: nothing
         '''
-        pass  # delete this line and replace with your code here
+        self.move = move
+        self.encrypting_dict = self.get_encrypting_dict(move)
+        self.encrypted_text = self.apply_move(move)
 
 
 class CipherText(Text):
@@ -171,7 +197,8 @@ class CipherText(Text):
             self.text (string, determined by input text)
             self.valid_words (list, determined using helper function load_wordlist)
         '''
-        pass  # delete this line and replace with your code here
+        self.text = text
+        self.valid_words = load_wordlist(WORDLIST_FILENAME)
 
 
     ### YOU NEED TO MODIFY THIS METHOD ###
@@ -189,19 +216,31 @@ class CipherText(Text):
         test case in main function below.
 
         '''
-        pass  # delete this line and replace with your code here
+        max_number = 0
+        best_move = 0
+        for i in range(26):
+            number = 0
+            new_message = self.apply_move(i)
+            for word in new_message.split(' '):
+                if is_a_valid_word(self.valid_words, word):
+                    number += 1
+            if number > max_number:
+                max_number = number
+                best_move = i
+        return best_move, self.apply_move(best_move)
 
 
 
-### DO NOT MODIFY THIS FUNCTION ###
+## DO NOT MODIFY THIS FUNCTION ###
 def decrypt_joke():
     joke = CipherText(get_joke_string())
     return joke.decrypt_text()
 
 
-### DO NOT MODIFY THIS FUNCTION ###
+## DO NOT MODIFY THIS FUNCTION ###
 def main():
     # Example test case (PlainText)
+
     plaintext = PlainText('hello', 2)
     print('Expected Output: jgnnq')
     print('Actual Output:', plaintext.get_encrypted_text())
